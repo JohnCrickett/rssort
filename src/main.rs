@@ -59,11 +59,11 @@ fn main() {
     }
 
     if args.u {
-        contents.dedup()
+        contents.dedup();
     }
 
-    for i in contents {
-        print!("{}\n", i);
+    for l in contents {
+        print!("{}\n", l);
     }
 }
 
