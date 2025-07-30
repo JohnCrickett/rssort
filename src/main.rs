@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use clap::Parser;
 use rand::seq::SliceRandom;
 use rand::rng;
@@ -25,9 +27,6 @@ struct Arguments {
 }
 
 fn main() {
-    // stop "failed printing to stdout: Broken pipe (os error 32)" when used with head
-    reset_sigpipe();
-
     let args = Arguments::parse();
     
     if args.files.is_empty() {
@@ -72,7 +71,10 @@ fn main() {
     }
 
     for l in contents {
-        println!("{l}");
+        if let Err(e) = writeln!(std::io::stdout(), "{l}") {
+            eprintln!("Error writing to stdout: {e}");
+            std::process::exit(1);
+        }
     }
 }
 
@@ -150,16 +152,4 @@ fn merge(arr: &mut [String], left: &[String], right: &[String]) {
         j += 1;
         k += 1;
     }
-}
-
-#[cfg(unix)]
-fn reset_sigpipe() {
-    unsafe {
-        libc::signal(libc::SIGPIPE, libc::SIG_DFL);
-    }
-}
-
-#[cfg(not(unix))]
-fn reset_sigpipe() {
-    // no-op
 }
