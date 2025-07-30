@@ -45,3 +45,13 @@ AGREE
 AGREEMENT
 AND
 ```
+
+## Step 4
+```bash
+./target/release/rssort --random-sort words.txt | uniq | head -n5
+instructions
+hearted
+any
+Chinese
+was
+```

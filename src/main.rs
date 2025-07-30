@@ -1,4 +1,6 @@
 use clap::Parser;
+use rand::seq::SliceRandom;
+use rand::rng;
 
 #[derive(Parser, Debug)]
 #[command(author = "John Crickett", version, about="rssort, a simple sort clone in Rust")]
@@ -15,6 +17,10 @@ struct Arguments {
     #[arg(long, action = clap::ArgAction::SetTrue)]
     mergesort: bool,
 
+    /// Use random sort
+    #[arg(long, action = clap::ArgAction::SetTrue)]
+    random_sort: bool,
+
     files: Vec<String>,
 }
 
@@ -29,10 +35,11 @@ fn main() {
         std::process::exit(1);
     }
 
-    if args.qsort && args.mergesort {
-        eprintln!("Error: Please provide only one sort method");
+    if check_flags(args.qsort, args.mergesort, args.random_sort) {
+        eprintln!("Error: Only one sorting flag can be used at a time");
         std::process::exit(1);
     }
+
 
     let filename = args.files[0].clone();
 
@@ -54,6 +61,8 @@ fn main() {
         quicksort(&mut contents, 0, len as isize - 1);
     } else if args.mergesort {
         mergesort(&mut contents);
+    } else if args.random_sort {
+        contents.shuffle(&mut rng());
     } else {
         contents.sort();
     }
@@ -66,6 +75,12 @@ fn main() {
         print!("{}\n", l);
     }
 }
+
+fn check_flags(quicksort: bool, mergersort: bool, randomsort: bool) -> bool {
+    let flag_count = [quicksort, mergersort, randomsort].iter().filter(|&&x| x).count();
+    flag_count > 1
+}
+
 
 fn quicksort(arr: &mut Vec<String>, low: isize, high: isize) {
     if low < high {
