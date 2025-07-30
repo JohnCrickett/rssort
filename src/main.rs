@@ -30,7 +30,7 @@ fn main() {
 
     let args = Arguments::parse();
     
-    if args.files.len() < 1 {
+    if args.files.is_empty() {
         eprintln!("Error: Please provide a filename as an argument");
         std::process::exit(1);
     }
@@ -51,7 +51,7 @@ fn main() {
             .map(String::from)
             .collect(),
         Err(e) => {
-            eprintln!("Error reading file {}: {}", filename, e);
+            eprintln!("Error reading file {filename}: {e}");
             std::process::exit(1);
         }
     };
@@ -72,7 +72,7 @@ fn main() {
     }
 
     for l in contents {
-        print!("{}\n", l);
+        println!("{l}");
     }
 }
 
@@ -90,7 +90,7 @@ fn quicksort(arr: &mut Vec<String>, low: isize, high: isize) {
     }
 }
 
-fn partition(arr: &mut Vec<String>, low: isize, high: isize) -> isize {
+fn partition(arr: &mut [String], low: isize, high: isize) -> isize {
     let pivot = high as usize;
     let mut i = low - 1;
 
@@ -107,7 +107,7 @@ fn partition(arr: &mut Vec<String>, low: isize, high: isize) -> isize {
     i
 }
 
-fn mergesort(arr: &mut Vec<String>) {
+fn mergesort(arr: &mut [String]) {
     let len = arr.len();
     if len <= 1 {
         return;
@@ -123,10 +123,10 @@ fn mergesort(arr: &mut Vec<String>) {
     merge(arr, &left, &right);
 }
 
-fn merge(arr: &mut Vec<String>, left: &[String], right: &[String]) {
-    let mut i = 0; // Index for left array
-    let mut j = 0; // Index for right array
-    let mut k = 0; // Index for merged array
+fn merge(arr: &mut [String], left: &[String], right: &[String]) {
+    let mut i = 0;
+    let mut j = 0;
+    let mut k = 0;
 
     while i < left.len() && j < right.len() {
         if left[i] <= right[j] {
@@ -139,14 +139,12 @@ fn merge(arr: &mut Vec<String>, left: &[String], right: &[String]) {
         k += 1;
     }
 
-    // Copy remaining elements from left array, if any
     while i < left.len() {
         arr[k] = left[i].clone();
         i += 1;
         k += 1;
     }
 
-    // Copy remaining elements from right array, if any
     while j < right.len() {
         arr[k] = right[j].clone();
         j += 1;
