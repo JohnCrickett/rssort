@@ -1,5 +1,5 @@
 # Rust Sort
-Rust solution to Coding Challenges build your own sort.
+Rust solution to [Coding Challenges](https://codingchallenges.fyi) [build your own sort](https://codingchallenges.fyi/challenges/challenge-sort).
 
 ## Step 0
 Set up the testing by running":
