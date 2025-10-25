@@ -45,8 +45,6 @@ fn main() {
     let mut contents: Vec<String> = match std::fs::read_to_string(&filename) {
         Ok(content) => content
             .lines()
-            .map(str::trim)
-            .filter(|line| !line.is_empty())
             .map(String::from)
             .collect(),
         Err(e) => {
@@ -71,10 +69,7 @@ fn main() {
     }
 
     for l in contents {
-        if let Err(e) = writeln!(std::io::stdout(), "{l}") {
-            eprintln!("Error writing to stdout: {e}");
-            std::process::exit(1);
-        }
+       let _ = writeln!(std::io::stdout(), "{}", l);
     }
 }
 
